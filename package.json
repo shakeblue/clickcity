@@ -1,0 +1,19 @@
+{
+    "name": "clickcity",
+    "version": "1.0.0",
+    "description": "A script to generate FID, request installation, and login using proxies.",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "axios": "^1.7.7",
+        "chalk": "^4.1.2",
+        "crypto": "^1.0.1",
+        "crypto-js": "^4.2.0",
+        "https-proxy-agent": "^5.0.0",
+        "prompt-sync": "^4.2.0"
+    },
+    "author": "",
+    "license": "ISC"
+}
