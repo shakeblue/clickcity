@@ -3,8 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
 const prompt = require('prompt-sync')();
+const displayAuthorInfo = require('./author');
 
-// Read Proxy Configuration
+// Hiển thị thông tin tác giả
+displayAuthorInfo();
+
+// Đọc cấu hình Proxy
 function readProxyConfig() {
     const proxyFilePath = path.join(__dirname, 'proxy.txt');
     const proxyData = fs.readFileSync(proxyFilePath, 'utf8')
@@ -21,7 +25,7 @@ function readProxyConfig() {
     });
 }
 
-// Read Query IDs
+// Đọc Query IDs
 function readQueryIDs() {
     const dataFilePath = path.join(__dirname, 'data.txt');
     return fs.readFileSync(dataFilePath, 'utf8')
@@ -30,31 +34,31 @@ function readQueryIDs() {
         .filter(Boolean);
 }
 
-// Function to run a worker
-function runWorker(queryIDs, proxies, cipherCode) {
+// Hàm chạy worker
+function runWorker(queryIDs, proxies, workerKey) {
     return new Promise((resolve, reject) => {
         const worker = new Worker(path.join(__dirname, 'worker.js'), {
-            workerData: { queryIDs, proxies, cipherCode }
+            workerData: { queryIDs, proxies, workerKey }
         });
 
         worker.on('message', (message) => {
             if (message === 'done') {
                 resolve();
             } else {
-                reject(new Error('Worker encountered an error'));
+                reject(new Error('Worker gặp lỗi'));
             }
         });
 
         worker.on('error', reject);
         worker.on('exit', (code) => {
             if (code !== 0) {
-                reject(new Error(`Worker stopped with exit code ${code}`));
+                reject(new Error(`Worker dừng với mã thoát ${code}`));
             }
         });
     });
 }
 
-// Main function to manage workers
+// Hàm chính để quản lý workers
 async function main() {
     const proxies = readProxyConfig();
     const queryIDs = readQueryIDs();
@@ -62,25 +66,37 @@ async function main() {
 
     let numWorkers = 1;
     do {
-        numWorkers = parseInt(prompt('How many threads would you like to process?: '), 10);
+        numWorkers = parseInt(prompt('Bạn muốn xử lý bao nhiêu luồng?: '), 10);
         if (isNaN(numWorkers) || numWorkers <= 0) {
-            console.error(chalk.red('Invalid number of workers. Please enter a positive integer.'));
+            console.error(chalk.red('Số lượng luồng không hợp lệ. Vui lòng nhập một số nguyên dương.'));
         }
     } while (isNaN(numWorkers) || numWorkers <= 0);
 
     const batchSize = Math.ceil(queryIDs.length / numWorkers);
     
-    for (let i = 0; i < queryIDs.length; i += batchSize) {
-        const batch = queryIDs.slice(i, i + batchSize);
-        const batchProxies = proxies.slice(i, i + batchSize);
-        workerPromises.push(runWorker(batch, batchProxies));
-    }
-
-    try {
-        await Promise.all(workerPromises);
-        console.log(chalk.green('All accounts have been processed.'));
-    } catch (error) {
-        console.error(chalk.red('Error in main function:'), error);
+    while (true){
+        let workerKey = 0;
+        for (let i = 0; i < queryIDs.length; i += batchSize) {
+            const batch = queryIDs.slice(i, i + batchSize);
+            const batchProxies = proxies.slice(i, i + batchSize);
+            workerKey ++;
+            workerPromises.push(runWorker(batch, batchProxies, workerKey));
+        }
+         
+        try {
+            await Promise.all(workerPromises);
+            console.log(chalk.green('Tất cả tài khoản đã được xử lý.'));
+        } catch (error) {
+            console.error(chalk.red('Lỗi trong hàm chính:'), error);
+        }
+        // đếm ngược 120 giây và tiếp tục
+        let time = 300;
+        console.log(chalk.yellow(`Chờ ${time} giây trước khi bắt đầu lại...`));
+        while (time > 0) {
+            console.log(chalk.yellow(`Tiếp tục sau ${time} giây...`));
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            time--;
+        }
     }
 }
 
