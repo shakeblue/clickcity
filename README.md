@@ -2,7 +2,7 @@
 
 ## Giới thiệu
 
-Dự án này sử dụng Node.js để xử lý các yêu cầu thông qua các worker threads. Nó đọc cấu hình proxy và danh sách các ID truy vấn từ các tệp tin và phân phối công việc cho các worker để xử lý.
+Dự án này sử dụng Node.js để xử lý các tác vụ trong game Clickcity. Nó đọc cấu hình proxy và danh sách các ID truy vấn từ các tệp tin và phân phối công việc cho các luồng để xử lý.
 
 ## Cài đặt
 
@@ -37,8 +37,21 @@ Dự án này sử dụng Node.js để xử lý các yêu cầu thông qua các
 - Đảm bảo rằng các tệp tin `proxy.txt` và `data.txt` đã được cấu hình đúng trước khi chạy chương trình.
 - Chương trình sẽ tiếp tục chạy và xử lý lại các ID truy vấn sau mỗi 300 giây.
 
+## Tính năng chính
+
+Tool thực hiện các tác vụ chính sau:
+- **Đăng nhập**: Tự động đăng nhập tài khoản dựa trên query id.
+- **Nâng cấp cấp bậc**: Nâng cấp cấp bậc của người dùng dựa trên số dư tiền mặt.
+- **Nhận thưởng hàng ngày**: Nhận thưởng hàng ngày cho người dùng.
+- **Gửi câu đố hàng ngày**: Gửi câu đố hàng ngày và nhận thưởng.
+- **Nhận mã hàng ngày**: Nhận mã hàng ngày và nhận thưởng.
+- **Xử lý nhiệm vụ xã hội**: Xử lý và nhận thưởng từ các nhiệm vụ xã hội.
+- **Auto tap để nhận gạch**: Auto tap để nhận gạch.
+- **Mua thẻ**: Mua thẻ cho người dùng.
+- **Nhận thưởng học viện**: Nhận thưởng từ học viện.
+
 ## Liên hệ
 
 Nếu bạn có bất kỳ câu hỏi hoặc gặp vấn đề, vui lòng liên hệ với tôi:
-Tele: https://t.me/longht2010
-Zalo: 0989320735
+- Tele: [https://t.me/longht2010](https://t.me/longht2010)
+- Zalo: 0989320735
