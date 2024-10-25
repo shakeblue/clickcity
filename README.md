@@ -4,6 +4,8 @@
 
 Dự án này sử dụng Node.js để xử lý các tác vụ trong game Clickcity. Nó đọc cấu hình proxy và danh sách các ID truy vấn từ các tệp tin và phân phối công việc cho các luồng để xử lý.
 
+![alt text](image.png)
+
 ## Cài đặt
 
 1. Cài đặt Node.js từ [trang chủ Node.js](https://nodejs.org/).
